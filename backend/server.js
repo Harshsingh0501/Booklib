@@ -39,7 +39,10 @@ const io = socketIo(server, {
 });
 
 // Middleware
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: 'https://booklib-1-8mnc.onrender.com', // <-- Your frontend Render URL
+  credentials: true
+}));
 app.use(express.json());
 
 // In-memory book storage (replace with database in production)

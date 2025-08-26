@@ -8,7 +8,7 @@ const getApiBaseUrl = () => {
 
     return isLocal
       ? 'http://localhost:5000/api'
-      : 'https://my-backend.onrender.com/api';
+      : 'https://booklib-apuj.onrender.com/api'; // <-- Correct backend URL
   }
   // Fallback (SSR or non-browser)
   return 'http://localhost:5000/api';
