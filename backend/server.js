@@ -11,17 +11,22 @@ const server = http.createServer(app);
 const allowedOrigins = [
   'http://localhost:3000',
   'https://my-frontend.onrender.com',
+  'https://booklib-1-8mnc.onrender.com',
 ];
 
 const corsOptions = {
   origin: (origin, callback) => {
+    // Allow requests with no origin (e.g., mobile apps, curl, server-to-server, health checks)
+    if (!origin) return callback(null, true);
+
     if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+      return callback(null, true);
     }
+
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
 };
 
 // Configure Socket.IO with CORS using the same allowlist
