@@ -7,20 +7,34 @@ const { v4: uuidv4 } = require('uuid');
 const app = express();
 const server = http.createServer(app);
 
-// Configure Socket.IO with CORS
+// CORS allowlist for both Express and Socket.IO
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://my-frontend.onrender.com',
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+};
+
+// Configure Socket.IO with CORS using the same allowlist
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000", // React app URL
-    methods: ["GET", "POST"],
-    credentials: true
-  }
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true,
+  },
 });
 
 // Middleware
-app.use(cors({
-  origin: "http://localhost:3000",
-  credentials: true
-}));
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // In-memory book storage (replace with database in production)

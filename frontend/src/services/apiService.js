@@ -1,8 +1,22 @@
 import axios from 'axios';
 
+// Decide base URL by hostname at runtime
+const getApiBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    const isLocal = host === 'localhost' || host === '127.0.0.1';
+
+    return isLocal
+      ? 'http://localhost:5000/api'
+      : 'https://my-backend.onrender.com/api';
+  }
+  // Fallback (SSR or non-browser)
+  return 'http://localhost:5000/api';
+};
+
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  baseURL: getApiBaseUrl(),
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
